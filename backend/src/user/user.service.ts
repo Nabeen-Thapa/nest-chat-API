@@ -60,11 +60,12 @@ export class UserService {
       userId: user.id,
       email: user.email,
       name: user.name,
+      phone:user.phone
     };
 
 
     const accessToken = signAccessToken(payload);
-    const refreshToken = signRefreshToken({ userId: user.id });
+    const refreshToken = signRefreshToken(user.id);
 
     // 5️⃣ Store refresh token in Redis
     await this.redisService.set(
