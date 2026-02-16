@@ -1,20 +1,25 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Req } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChatDto } from './dto/create-chat.dto';
 import { UpdateChatDto } from './dto/update-chat.dto';
+import type { Request } from 'express';
 
 @Controller('chat')
 export class ChatController {
-  constructor(private readonly chatService: ChatService) {}
+  constructor(private readonly chatService: ChatService) { }
 
   @Post()
   create(@Body() createChatDto: CreateChatDto) {
     return this.chatService.create(createChatDto);
   }
 
-  @Get()
-  findAll() {
-    return this.chatService.findAll();
+  @Get('view')
+  findAll(@Req() req: Request) {
+    return {
+      message: 'login user',
+      user: req['user'],
+    };
+    // return this.chatService.findAll();
   }
 
   @Get(':id')

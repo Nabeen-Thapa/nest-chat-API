@@ -17,16 +17,13 @@ export function signRefreshToken(payload: string) {
 }
 
 export const verifyAccessToken = (token?: string): JwtPayload => {
-  if (!token) {
-    throw new Error('Access token must be provided');
-  }
+  if (!token)  throw new Error('Access token must be provided');
   return verify(token, ACCESS_SECRET) as JwtPayload;
 };
 
 export const verifyRefreshToken = (token?: string): JwtPayload => {
-  if (!token) {
-    throw new Error('Refresh token must be provided');
-  }
+  if (!token) throw new Error('Refresh token must be provided');
+  
   return verify(token, REFRESH_SECRET) as JwtPayload;
 };
 
