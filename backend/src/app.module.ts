@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { RedisModule } from './redis/redis.module';
+import { ChatModule } from './chat/chat.module';
 import mikroOrmConfig from './config/orm.config';
 
 @Module({
@@ -14,6 +15,7 @@ import mikroOrmConfig from './config/orm.config';
     AuthModule,
     ConfigModule.forRoot({isGlobal: true,}),
     RedisModule,
+    ChatModule,
   ],
 
   controllers: [AppController],

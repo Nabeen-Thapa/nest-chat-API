@@ -10,7 +10,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         (req) => req?.cookies?.access_token,
       ]),
       ignoreExpiration: false,
-      secretOrKey: 'SUPER_SECRET_KEY', // use env in real apps
+      secretOrKey: process.env.SUPER_SECRET_KEY || "", // use env in real apps
     });
   }
 
