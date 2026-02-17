@@ -3,9 +3,9 @@ import { FriendRequest } from '../../friend-request/entities/friend-request.enti
 
 @Entity()
 export class User {
-  @PrimaryKey()
-  id!: string;
-
+  @PrimaryKey({ type: 'uuid' })
+  id: string = crypto.randomUUID(); 
+  
   @Property()
   name!: string;
 

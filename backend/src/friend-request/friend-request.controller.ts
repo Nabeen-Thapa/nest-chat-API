@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, Req, UnauthorizedException } from '@nestjs/common';
 import { FriendRequestService } from './friend-request.service';
 import { CreateFriendRequestDto } from './dto/create-friend-request.dto';
 import { UpdateFriendRequestDto } from './dto/update-friend-request.dto';
@@ -10,38 +10,35 @@ export class FriendRequestController {
 
   @Post("send")
   send(@Body() createFriendRequestDto: CreateFriendRequestDto, @Req() req: Request) {
+    if(!req.user) throw new UnauthorizedException("you are not authorized")
     const senderId = (req.user as any).userId;
     return this.friendRequestService.send(createFriendRequestDto, senderId);
   }
+  
+  @Get("requests")
+  View(@Req() req: Request) {
+       if(!req.user) throw new UnauthorizedException("you are not authorized")
+    const currentUser = (req.user as any).userId;
+  console.log("fr req con:", currentUser)
+    return this.friendRequestService.viewReceivedRequests(currentUser);
+  } 
 
   @Post()
-  accept() {
-    return this.friendRequestService.findAll();
+  accept(@Req() req: Request) {
+    if(!req.user) throw new UnauthorizedException("you are not authorized")
+
+    return this.friendRequestService.accept();
   }
 
   @Delete(':id')
   reject(@Param('id') id: string) {
-    return this.friendRequestService.remove(+id);
-  }
-
-  @Post()
-  pending() {
-    return this.friendRequestService.findAll();
-  }
-
-  @Get()
-  sent() {
-    return this.friendRequestService.findAll();
+    return this.friendRequestService.reject(+id);
   }
 
   //sender can cancel reuqest
   @Post()
   cancel() {
-    return this.friendRequestService.findAll();
+    return this.friendRequestService.cancel();
   }
 
-  @Get()
-  View() {
-    return this.friendRequestService.findAll();
-  } 
 }
