@@ -29,9 +29,11 @@ export class FriendRequestController {
     return this.friendRequestService.accept(senderId, receiverId);
   }
 
-  @Delete(':id')
-  reject(@Param('id') id: string) {
-    return this.friendRequestService.reject(+id);
+  @Delete("reject/:senderId")
+  reject(@Param('senderId') senderId: string, @Req() req: Request) {
+    if (!req.user) throw new UnauthorizedException("you are not authorized")
+    const receiverId = (req.user as any).userId;
+    return this.friendRequestService.reject(senderId, receiverId);
   }
 
   //sender can cancel reuqest

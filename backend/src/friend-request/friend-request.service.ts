@@ -37,11 +37,11 @@ export class FriendRequestService {
   }
 
   async viewReceivedRequests(correntUserId: string) {
-    const user = await this.em.findOne(User, { id: correntUserId });
+    const user = await this.em.findOne(User, { id: correntUserId,  });
     if (!user) throw new UnauthorizedException("you are not registered yet");
 
     const receivedRequests = await this.em.find(FriendRequest,
-      { receiver: user }, { populate: ['sender'] }
+      { receiver: user, status: FriendRequestStatus.PENDING }, { populate: ['sender'] }
     )
 
     return receivedRequests.map(fr => ({
@@ -66,8 +66,8 @@ export class FriendRequestService {
 
     const request = await this.em.findOne(FriendRequest,
       { sender, receiver, status: FriendRequestStatus.PENDING, })
-
     if (!request) throw new NotFoundException('Friend request not found or already handled');
+
     request.status = FriendRequestStatus.ACCEPTED;
     request.updatedAt = new Date();
 
@@ -82,8 +82,16 @@ export class FriendRequestService {
     return `This action returns all friendRequest`;
   }
 
-  reject(id: number) {
-    return `This action removes a #${id} friendRequest`;
+  async reject(senderId: string, receiverId: string) {
+    const sender = await this.em.findOne(User, { id: senderId })
+    const receiver = await this.em.findOne(User, { id: receiverId })
+    if (!sender || !receiver) throw new NotFoundException('User not found');
+
+    const request = await this.em.findOne(FriendRequest,
+      { sender, receiver, status: FriendRequestStatus.PENDING, })
+    if (!request) throw new NotFoundException('Friend request not found or already handled');
+
+    await this.em.removeAndFlush(request);
   }
 
   async cancel() {
