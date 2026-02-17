@@ -1,13 +1,11 @@
-import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
+import { Collection, Entity, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
+import { FriendRequest } from '../../friend-request/entities/friend-request.entity';
 
 @Entity()
 export class User {
   @PrimaryKey()
   id!: string;
-  
-  // @PrimaryKey({ type: 'uuid' })
-  // id: string = crypto.randomUUID();
-  
+
   @Property()
   name!: string;
 
@@ -25,4 +23,10 @@ export class User {
 
   @Property({ onCreate: () => new Date() })
   createdAt?: Date;
+
+  @OneToMany(() => FriendRequest, fr => fr.sender)
+  sendRequests = new Collection<FriendRequest>(this);
+  
+  @OneToMany(() => FriendRequest, fr => fr.receiver)
+  receiveRequests = new Collection<FriendRequest>(this)
 }
