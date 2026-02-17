@@ -1,1 +1,5 @@
-export class CreateFriendRequestDto {}
+export class CreateFriendRequestDto {
+    senderId!: string;
+    receiverId!: string;
+
+}

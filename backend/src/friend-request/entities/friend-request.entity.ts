@@ -1,7 +1,8 @@
-import { Enum, ManyToOne, OneToMany, PrimaryKey, Property, Rel } from "@mikro-orm/core";
+import { Entity, Enum, ManyToOne, PrimaryKey, Property } from "@mikro-orm/core";
 import { User } from "../../user/entities/user.entity";
 import { FriendRequestStatus } from "../types/friend-request.type";
 
+@Entity()
 export class FriendRequest {
     @PrimaryKey({ type: 'uuid' })
     id: string = crypto.randomUUID();
@@ -17,8 +18,8 @@ export class FriendRequest {
     status!: FriendRequestStatus;
 
     @Property()
-    createdAt!: Date;
+    createdAt?: Date;
 
     @Property()
-    updatedAt!: Date;
+    updatedAt?: Date;
 }
